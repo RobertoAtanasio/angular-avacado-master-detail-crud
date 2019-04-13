@@ -13,6 +13,6 @@ export class CategoryListComponent implements OnInit {
   }
 
   excluir() {
-    alert("Excluir");
+    alert('Excluir');
   }
 }
