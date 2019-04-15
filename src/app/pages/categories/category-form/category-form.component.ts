@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from '../shared/category.model';
 import { CategoryService } from '../shared/category.service';
 
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 
 import toastr from 'toastr';
 
@@ -38,6 +38,15 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
 
   ngAfterContentChecked(): void {
     this.setPageTitle();
+  }
+
+  submitForm() {
+    this.submittingForm = true;
+    if (this.currentAction === 'new') {
+      this.createCategory();
+    } else {
+      this.updateCategory();
+    }
   }
 
   private setCurrentAction() {
@@ -80,6 +89,51 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     } else {
       const categoryName = this.category.name || '';
       this.pageTitle = 'Editando Categoria: ' + categoryName;
+    }
+  }
+
+  private createCategory() {
+    const category: Category = Object.assign(new Category(), this.categoryForm.value);
+    this.categoryService.create(category)
+      .subscribe(
+        data => this.actionsForSuccess(data),
+        error => this.actionsForErro(error)
+      );
+  }
+
+  private updateCategory() {
+    const category: Category = Object.assign(new Category(), this.categoryForm.value);
+    this.categoryService.update(category)
+      .subscribe(
+        data => this.actionsForSuccess(data),
+        error => this.actionsForErro(error)
+      );
+  }
+
+  private actionsForSuccess(category: Category) {
+    toastr.success('Solicitação processada com sucesso!');
+
+    // Exemplificando como é o funcionamento abaixO do router:
+    // nomedosite.com/categories/new        página atual
+    // nomedosite.com/categories            carrega esta página
+    // nomedosite.com/categories/:id/edit   chama a página de edição
+    // obs.: o skipLocationChange faz com que não seja guardada o histórico da página
+    //       no browser do navegador.
+
+    // redirect/reload component page
+    this.router.navigateByUrl('categories', {skipLocationChange: true}).then(
+      () => this.router.navigate(['categories', category.id, 'edit'])
+    );
+  }
+
+  private actionsForErro(error) {
+    toastr.error('Ocorreu um erro ao processar a sua solicitação.');
+    this.submittingForm = false;
+    if (error.status === 422) {
+      this.serverErrorMessages = JSON.parse(error._body).errors;
+      // exemplo: ['Nome já existe','O email não pode ficar em branco']
+    } else {
+      this.serverErrorMessages = ['Falha na comunicação com o servidor. Por favor, tente mais tarde.'];
     }
   }
 }
