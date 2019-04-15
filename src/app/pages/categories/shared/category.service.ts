@@ -18,6 +18,7 @@ export class CategoryService {
   ) { }
 
   getAll(): Observable<Category[]> {
+    console.log('>> entrou em getAll()');
     return this.http.get(this.apiPath).pipe(
       catchError(this.handlerError),
       map(this.jsonDataForCategories)
@@ -56,12 +57,13 @@ export class CategoryService {
   }
 
   private handlerError(error: any): Observable<any> {
-    console.log('Erro narequisição:', error);
+    console.log('Erro na requisição:', error);
     return throwError(error);
   }
 
   private jsonDataForCategories(jsonData: any): Category[] {
     const categories: Category[] = [];
+    console.log('>> jsonDataForCategories', jsonData);
     jsonData.forEach(element => {
       categories.push(element as Category);
     });
