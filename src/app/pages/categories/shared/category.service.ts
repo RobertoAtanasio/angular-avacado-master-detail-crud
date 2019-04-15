@@ -42,6 +42,7 @@ export class CategoryService {
 
   update(categoria: Category): Observable<Category> {
     const url = `${this.apiPath}/${categoria.id}`;
+    console.log('>> entrou no update');
     return this.http.put(url, categoria).pipe(
       catchError(this.handlerError),
       map(() => categoria)
@@ -71,6 +72,7 @@ export class CategoryService {
   }
 
   private jsonDataForCategory(jsonData: any): Category {
+    console.log('>> jsonDataForCategory', jsonData);
     return jsonData as Category;
   }
 }
