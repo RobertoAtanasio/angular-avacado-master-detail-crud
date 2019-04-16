@@ -18,7 +18,7 @@ export class EntryService {
   ) { }
 
   getAll(): Observable<Entry[]> {
-    console.log('>> entrou em getAll()');
+    // console.log('>> entrou em getAll()');
     return this.http.get(this.apiPath).pipe(
       catchError(this.handlerError),
       map(this.jsonDataForEntries)
@@ -42,7 +42,7 @@ export class EntryService {
 
   update(entry: Entry): Observable<Entry> {
     const url = `${this.apiPath}/${entry.id}`;
-    console.log('>> entrou no update');
+    // console.log('>> entrou no update');
     return this.http.put(url, entry).pipe(
       catchError(this.handlerError),
       map(() => entry)
@@ -64,15 +64,15 @@ export class EntryService {
 
   private jsonDataForEntries(jsonData: any): Entry[] {
     const entries: Entry[] = [];
-    console.log('>> jsonDataForEntries', jsonData);
+    // console.log('>> ', jsonData[0] as Entry);
+    // console.log('>> ', Object.assign(new Entry(), jsonData[0]));
     jsonData.forEach(element => {
-      entries.push(element as Entry);
+      entries.push(Object.assign(new Entry(), element));
     });
     return entries;
   }
 
   private jsonDataForEntry(jsonData: any): Entry {
-    console.log('>> jsonDataForEntry', jsonData);
-    return jsonData as Entry;
+    return Object.assign(new Entry(), jsonData);
   }
 }

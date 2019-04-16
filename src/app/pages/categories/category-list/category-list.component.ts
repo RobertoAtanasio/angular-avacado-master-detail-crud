@@ -18,7 +18,7 @@ export class CategoryListComponent implements OnInit {
     this.categoryService.getAll().subscribe(
       categories => {
         this.categorias = categories;
-        console.log('>> Lista', this.categorias);
+        // console.log('>> Lista', this.categorias);
       },
       error => alert('Erro ao carregar a lista.')
     );
