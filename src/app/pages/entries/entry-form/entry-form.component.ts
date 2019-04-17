@@ -8,6 +8,8 @@ import { EntryService } from '../shared/entry.service';
 import { switchMap, catchError } from 'rxjs/operators';
 
 import toastr from 'toastr';
+import { CategoryService } from '../../categories/shared/category.service';
+import { Category } from '../../categories/shared/category.model';
 
 @Component({
   selector: 'app-entry-form',
@@ -22,18 +24,44 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   serverErrorMessages: string[] = null;
   submittingForm = false;
   entry: Entry = new Entry();
+  categories: Array<Category>;
+
+  imaskConfig = {
+    mask: Number,
+    scale: 2,
+    thousandsSeparator: '.',
+    padFractionalZeros: true,
+    normalizeZeros: true,
+    radix: ','
+  };
+
+  ptBR = {
+    firstDayOfWeek: 0,
+    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+    dayNamesMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'],
+    monthNames: [
+      'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho',
+      'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ],
+    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    today: 'Hoje',
+    clear: 'Limpar'
+  }
 
   constructor(
     private entryService: EntryService,
     private route: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit() {
     this.setCurrentAction();
     this.buildEntryForm();
     this.loadEntry();
+    this.loadCategories();
   }
 
   ngAfterContentChecked(): void {
@@ -47,6 +75,17 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     } else {
       this.updateEntry();
     }
+  }
+
+  get typeOptions(): Array<any> {
+    return Object.entries(Entry.types).map(
+      ([value, text]) => {
+        return {
+          text: text,
+          value: value
+        }
+      }
+    )
   }
 
   private setCurrentAction() {
@@ -87,6 +126,13 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     }
   }
 
+  private loadCategories() {
+    this.categoryService.getAll()
+    .subscribe(
+      categories => this.categories = categories
+    );
+  }
+
   private setPageTitle() {
     if (this.currentAction === 'new') {
       this.pageTitle = 'Cadastro de Novo Lançamento';
@@ -107,11 +153,26 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
 
   private updateEntry() {
     const entry: Entry = Object.assign(new Entry(), this.entryForm.value);
-    this.entryService.update(entry)
-      .subscribe(
-        data => this.actionsForSuccess(data),
-        error => this.actionsForErro(error)
-      );
+    this.categoryService.getById(entry.categoryId)
+    .subscribe(
+      (category) => {
+        entry.category = category;
+        this.entryService.update(entry)
+          .subscribe(
+            data => this.actionsForSuccess(data),
+            error => this.actionsForErro(error)
+          );
+      },
+      (error) => {
+        alert('Ocorreu um erro no servidor. Tente mais tarde');
+      }
+    );
+
+    // this.entryService.update(entry)
+    //   .subscribe(
+    //     data => this.actionsForSuccess(data),
+    //     error => this.actionsForErro(error)
+    //   );
   }
 
   private actionsForSuccess(entry: Entry) {

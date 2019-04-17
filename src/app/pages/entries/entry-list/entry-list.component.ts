@@ -17,7 +17,6 @@ export class EntryListComponent implements OnInit {
     this.entryService.getAll().subscribe(
       entries => {
         this.entries = entries;
-        // console.log('>> Lista', this.entries);
       },
       error => alert('Erro ao carregar a lista.')
     );
