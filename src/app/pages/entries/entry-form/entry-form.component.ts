@@ -29,7 +29,7 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   imaskConfig = {
     mask: Number,
     scale: 2,
-    thousandsSeparator: '.',
+    thousandsSeparator: '',
     padFractionalZeros: true,
     normalizeZeros: true,
     radix: ','
@@ -158,20 +158,6 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
       data => this.actionsForSuccess(data),
       error => this.actionsForErro(error)
     );
-    // this.categoryService.getById(entry.categoryId)
-    // .subscribe(
-    //   (category) => {
-    //     entry.category = category;
-    //     this.entryService.update(entry)
-    //       .subscribe(
-    //         data => this.actionsForSuccess(data),
-    //         error => this.actionsForErro(error)
-    //       );
-    //   },
-    //   (error) => {
-    //     alert('Ocorreu um erro no servidor. Tente mais tarde');
-    //   }
-    // );
   }
 
   private actionsForSuccess(entry: Entry) {
