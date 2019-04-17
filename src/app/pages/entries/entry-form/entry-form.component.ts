@@ -153,26 +153,25 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
 
   private updateEntry() {
     const entry: Entry = Object.assign(new Entry(), this.entryForm.value);
-    this.categoryService.getById(entry.categoryId)
+    this.entryService.update(entry)
     .subscribe(
-      (category) => {
-        entry.category = category;
-        this.entryService.update(entry)
-          .subscribe(
-            data => this.actionsForSuccess(data),
-            error => this.actionsForErro(error)
-          );
-      },
-      (error) => {
-        alert('Ocorreu um erro no servidor. Tente mais tarde');
-      }
+      data => this.actionsForSuccess(data),
+      error => this.actionsForErro(error)
     );
-
-    // this.entryService.update(entry)
-    //   .subscribe(
-    //     data => this.actionsForSuccess(data),
-    //     error => this.actionsForErro(error)
-    //   );
+    // this.categoryService.getById(entry.categoryId)
+    // .subscribe(
+    //   (category) => {
+    //     entry.category = category;
+    //     this.entryService.update(entry)
+    //       .subscribe(
+    //         data => this.actionsForSuccess(data),
+    //         error => this.actionsForErro(error)
+    //       );
+    //   },
+    //   (error) => {
+    //     alert('Ocorreu um erro no servidor. Tente mais tarde');
+    //   }
+    // );
   }
 
   private actionsForSuccess(entry: Entry) {
