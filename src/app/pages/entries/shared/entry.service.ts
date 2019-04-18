@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, flatMap} from 'rxjs/operators';
 
 import { Entry } from './entry.model';
 import { CategoryService } from '../../categories/shared/category.service';
-import { Category } from '../../categories/shared/category.model';
 
 @Injectable({
   providedIn: 'root'
@@ -62,11 +61,6 @@ export class EntryService {
         )
       })
     )
-    // const url = `${this.apiPath}/${entry.id}`;
-    // return this.http.put(url, entry).pipe(
-    //   catchError(this.handlerError),
-    //   map(() => entry)
-    // )
   }
 
   delete(id: number): Observable<any> {
@@ -84,8 +78,6 @@ export class EntryService {
 
   private jsonDataForEntries(jsonData: any): Entry[] {
     const entries: Entry[] = [];
-    // console.log('>> ', jsonData[0] as Entry);
-    // console.log('>> ', Object.assign(new Entry(), jsonData[0]));
     jsonData.forEach(element => {
       entries.push(Object.assign(new Entry(), element));
     });
