@@ -62,14 +62,6 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
 
   protected abstract buildResourceForm(): void;
 
-  // protected buildResourceForm() {
-  //   this.resourceForm = this.formBuilder.group({
-  //     id: [null],
-  //     name: [null, [Validators.required, Validators.minLength(2)]],
-  //     description: [null]
-  //   });
-  // }
-
   protected loadResource() {
     if (this.currentAction === 'edit') {
       this.route.paramMap.pipe(
@@ -130,6 +122,9 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
     // nomedosite.com/categories/:id/edit   chama a página de edição
     // obs.: o skipLocationChange faz com que não seja guardada o histórico da página
     //       no browser do navegador.
+
+    // console.log(this.route.snapshot.parent);
+    // console.log(this.route.snapshot.parent.url[0].path);
 
     const baseComponentPath = this.route.snapshot.parent.url[0].path;
     // redirect/reload component page
