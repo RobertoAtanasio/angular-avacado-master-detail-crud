@@ -113,12 +113,15 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   private actionsForSuccess(category: Category) {
     toastr.success('Solicitação processada com sucesso!');
 
-    // Exemplificando como é o funcionamento abaixO do router:
+    // Exemplificando como é o funcionamento abaixo do router:
     // nomedosite.com/categories/new        página atual
     // nomedosite.com/categories            carrega esta página
     // nomedosite.com/categories/:id/edit   chama a página de edição
     // obs.: o skipLocationChange faz com que não seja guardada o histórico da página
     //       no browser do navegador.
+
+    // console.log(this.route.snapshot.parent);
+    // console.log(this.route.snapshot.parent.url[0].path);
 
     // redirect/reload component page
     this.router.navigateByUrl('categories', {skipLocationChange: true}).then(
