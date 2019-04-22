@@ -26,14 +26,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let categoria of categorias">
+    <tr *ngFor="let categoria of resources">
       <td>
         <strong>{{categoria.name}}</strong><br>
         <small>{{categoria.description}}</small>
       </td>
       <td>
         <a [routerLink]="[categoria.id, 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
-        <button (click)="deleteCategoria(categoria)" class="btn btn-outline-danger btn-sm">Excluir</button>
+        <button (click)="deleteResource(categoria)" class="btn btn-outline-danger btn-sm">Excluir</button>
       </td>
     </tr>
   </tbody>
