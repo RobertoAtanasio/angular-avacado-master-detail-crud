@@ -9,6 +9,8 @@ import { EntryService } from '../shared/entry.service';
 import { CategoryService } from '../../categories/shared/category.service';
 import { Category } from '../../categories/shared/category.model';
 
+import toastr from 'toastr';
+
 @Component({
   selector: 'app-entry-form',
   templateUrl: './entry-form.component.html',
@@ -90,7 +92,8 @@ export class EntryFormComponent extends BaseResourceFormComponent<Entry> impleme
   private loadCategories() {
     this.categoryService.getAll()
     .subscribe(
-      categories => this.categories = categories
+      categories => this.categories = categories,
+      () => toastr.error('Ocorreu um erro ao carregar as categorias. Tente mais tarde')
     );
   }
 

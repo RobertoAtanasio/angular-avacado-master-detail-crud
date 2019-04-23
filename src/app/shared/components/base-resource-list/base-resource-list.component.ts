@@ -3,6 +3,8 @@ import { OnInit } from '@angular/core';
 import { BaseResourceModel } from '../../models/base-resource.model';
 import { BaseResourceService } from '../../services/base-resource.service';
 
+import toastr from 'toastr';
+
 export abstract class BaseResourceListComponent<T extends BaseResourceModel> implements OnInit {
 
   resources: T[] = [];
@@ -14,7 +16,10 @@ export abstract class BaseResourceListComponent<T extends BaseResourceModel> imp
       resources => {
         this.resources = resources.sort(( a, b ) => b.id - a.id);
       },
-      error => alert('Erro ao carregar a lista.')
+      error => {
+        // alert('Erro ao carregar a lista.');
+        toastr.error('Erro ao carregar a lista.');
+      }
     );
   }
 

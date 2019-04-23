@@ -73,7 +73,8 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel> imp
           this.resourceForm.patchValue(resource);
         },
         (error) => {
-          alert('Ocorreu um erro no servidor. Tente mais tarde');
+          // alert('Ocorreu um erro no servidor. Tente mais tarde');
+          toastr.success('Ocorreu um erro no servidor. Tente mais tarde');
         }
       )
     }
