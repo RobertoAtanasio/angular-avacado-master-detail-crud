@@ -3,8 +3,11 @@ import { Injectable, Injector } from '@angular/core';
 import { BaseResourceService } from '../../../shared/services/base-resource.service';
 import { CategoryService } from '../../categories/shared/category.service';
 import { Entry } from './entry.model';
+
 import { Observable } from 'rxjs';
-import { flatMap, catchError } from 'rxjs/operators';
+import { flatMap, catchError, map } from 'rxjs/operators';
+
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +40,28 @@ export class EntryService extends BaseResourceService<Entry> {
     // )
   }
 
+  getByMonthAndYear(month: string, year: string): Observable<Entry []> {
+    return this.getAll().pipe(
+      map(entries => {
+        const entry = this.filterByMonthAndYear(entries, month, year);
+        // console.log('>>', entry );
+        return entry;
+      }),
+      catchError(this.handlerError)
+    );
+  }
+
+  private filterByMonthAndYear(entries: Entry[], month: string, year: string) {
+    return entries.filter(entry => {
+      const entryDate = moment(entry.date, 'DD/MM/YYYY');
+      const monthMatches = entryDate.month() + 1 === parseInt(month, 10);
+      const yearMatches = entryDate.year() === parseInt(year, 10);
+      if (monthMatches && yearMatches) {
+        return entry;
+      }
+    })
+  }
+
   private setCategoryAndSendToServer(entry: Entry, sendFn: any): Observable<Entry>{
     return this.categoryService.getById(entry.categoryId).pipe(
       flatMap(category => {
@@ -47,17 +72,4 @@ export class EntryService extends BaseResourceService<Entry> {
     );
   }
 
-  // protected jsonDataForResources(jsonData: any): Entry[] {
-  //   const entries: Entry[] = [];
-  //   jsonData.forEach(element => {
-  //     // entries.push(Object.assign(new Entry(), element));
-  //     entries.push(Entry.fromJson(element));
-  //   });
-  //   return entries;
-  // }
-
-  // protected jsonDataForResource(jsonData: any): Entry {
-  //   // return Object.assign(new Entry(), jsonData);
-  //   return Entry.fromJson(jsonData);
-  // }
 }
